@@ -1,7 +1,4 @@
-import os
 import random
-import re
-import pandas
 import hashlib
 
 from utils.utils import *
@@ -70,6 +67,7 @@ class ConvertStreetCode:
                     break
         if file_government is None:
             return None
+        print(file_government)
         self.address_government = pd.read_excel(self.path_save_data + file_government)
         return self.address_government
 
