@@ -29,7 +29,6 @@ class CrawlAddress(Thread):
         self.logger = logging.getLogger(self.__class__.__name__)
         self.config = Config()
         self.path_save_data = self.preprocess_directory_save_data(self.config.path_save_data.replace("\\", "/"))
-        # print(self.path_save_data)
         self.province_queue = Queue()
         self.district_queue_1 = Queue()
         self.district_queue_2 = Queue()
@@ -169,7 +168,7 @@ class CrawlAddress(Thread):
         self.logger.info("START DOWNLOAD ADDRESS FROM GOVERNMENT")
         download = DownloadExcelFile(self.path_save_data)
         download.download_file()
-        print("FINISH DOWNLOAD ADDRESS FROM GOVERNMENT")
+        self.logger.info("FINISH DOWNLOAD ADDRESS FROM GOVERNMENT")
 
     def create_folder_save_data(self):
         os.makedirs(self.path_save_data, exist_ok=True)
@@ -193,46 +192,44 @@ class CrawlAddress(Thread):
 
     def run(self):
         self.logger.info(f"START SERVICE UPDATE ADDRESS")
-        self.create_folder_save_data()
+        # self.create_folder_save_data()
         # DOWNLOAD EXCEL
         download_excel_crawler = threading.Thread(target=self.thread_download_excel)
         download_excel_crawler.start()
         download_excel_crawler.join()
         # CRAWL PROVINCE
-        province_crawler = threading.Thread(target=self.crawler_province)
-        province_crawler.start()
-        province_crawler.join()
+        # province_crawler = threading.Thread(target=self.crawler_province)
+        # province_crawler.start()
+        # province_crawler.join()
         # CRAWL DISTRICT
-        district_crawler = threading.Thread(target=self.thread_crawler_district)
-        district_crawler.start()
-        district_crawler.join()
+        # district_crawler = threading.Thread(target=self.thread_crawler_district)
+        # district_crawler.start()
+        # district_crawler.join()
         # CRAWL WARD AND STREET
         # ward_crawler = threading.Thread(target=self.thread_crawler_ward)
-        street_crawler = threading.Thread(target=self.thread_crawler_street)
+        # street_crawler = threading.Thread(target=self.thread_crawler_street)
         # while not self.district_queue_1.qsize():
         #     pass
         # ward_crawler.start()
-        while not self.district_queue_2.qsize():
-            pass
+        # while not self.district_queue_2.qsize():
+        #     pass
         # ward_crawler.join()
-        street_crawler.start()
-        street_crawler.join()
+        # street_crawler.start()
+        # street_crawler.join()
         convert_street = ConvertStreetCode(self.path_save_data)
         thread_convert_street = threading.Thread(target=convert_street.convert_data)
         thread_convert_street.start()
         convert_village = ConvertVillageCode(self.path_save_data)
         thread_convert_village = threading.Thread(target=convert_village.convert_data)
-        thread_convert_village.start()
-        thread_convert_village.join()
+        # thread_convert_village.start()
+        # thread_convert_village.join()
         thread_convert_street.join()
         self.remove_file_not_use()
 
 
 if __name__ == "__main__":
-    print(f" Start: {time.ctime()}")
     crawler_address = CrawlAddress()
     crawler_address.start()
     crawler_address.join()
-    print("DONE")
-    print(f" End: {time.ctime()}")
+
 

@@ -129,7 +129,7 @@ def process_invalid_word(word):
         else:
             word_after_process = word_after_process + each + " "
     word_after_process = re.sub(r"\s{2,}", " ", word_after_process)
-    return word_after_process.title().strip()
+    return word_after_process.strip()
 
 
 def setup_logging():
